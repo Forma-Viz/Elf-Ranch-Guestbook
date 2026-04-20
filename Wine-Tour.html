@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MRESTV5M4S"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-MRESTV5M4S');
+	</script>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Wine Tour ~ Recommended</title>
+	<link rel="stylesheet" href="styles.css" />
+	
+</head>
+
+<body class="theme-dark">
+	<div class="shell">
+		<div class="track" id="track">
+			<div class="screen" id="screenPrev" aria-hidden="true"></div>
+
+			<div class="screen" id="screenCurrent">
+				<main class="page page-wine" data-base="#5e5087">
+					<header class="page-header">
+						<h1>Wine Tour ~ Recommended</h1>
+					</header>
+
+					<section class="page-body">
+						<p class="wine-intro">
+							Would you like to make the most of your day, but are not sure where to start?<br>
+							Here is a suggested local itinerary you might enjoy. Some places require reservations, some do not.<br>
+							It is all very close, and there are a plethora of wineries you will simply drive by on this adventure up West Side Road.<br>
+							Please make sure to enjoy responsibly!
+						</p>
+
+						<div class="wine-itinerary-wrap">
+							<table class="wine-itinerary" aria-label="Suggested local itinerary">
+								<tbody>
+									<tr>
+										<td class="wine-time"></td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">9:45</td>
+										<td class="wine-loc-cell">Depart Elf Ranch</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">10:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">10:45</td>
+										<td class="wine-loc-cell">
+											<button type="button" class="wine-loc" data-wine-loc="Hartford Family Winery">
+												<b>Hartford Family Winery</b>
+											</button>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">11:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">11:45</td>
+										<td class="wine-loc-cell">
+											<button type="button" class="wine-loc" data-wine-loc="Korbel Champagne Cellars">
+												<b>Korbel Champagne Cellars</b>
+											</button>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">12:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">12:45</td>
+										<td class="wine-loc-cell">
+											Lunch Choice<br>
+											<button type="button" class="wine-loc" data-wine-loc="Russian River Pub">
+												<b>Russian River Pub</b>
+											</button>
+											<!-- <span class="wine-or">or</span> -->
+											<!-- <button type="button" class="wine-loc" data-wine-loc="Boon Eat+Drink">
+												<b>Boon Eat+Drink</b>
+											</button> -->
+										</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">1:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">1:45</td>
+										<td class="wine-loc-cell">
+											<button type="button" class="wine-loc" data-wine-loc="Moshin Vineyards">
+												<b>Moshin Vineyards</b>
+											</button>
+											<span class="wine-or">or</span>
+											<button type="button" class="wine-loc" data-wine-loc="Gary Farrell Vineyards & Winery">
+												<b>Gary Farrell Vineyards &amp; Winery</b>
+											</button>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">2:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">2:45</td>
+										<td class="wine-loc-cell">
+											<button type="button" class="wine-loc" data-wine-loc="J. Rochioli Vineyard & Winery">
+												<b>J. Rochioli Vineyard &amp; Winery</b>
+											</button>
+											<span class="wine-or">or</span>
+											<button type="button" class="wine-loc" data-wine-loc="Landmark Vineyards">
+												<b>Landmark Vineyards</b>
+											</button>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="wine-time">3:00</td>
+										<td class="wine-time">—</td>
+										<td class="wine-time">4:00</td>
+										<td class="wine-loc-cell">
+											<button type="button" class="wine-loc" data-wine-loc="Twomey Cellars">
+												<b>Twomey Cellars</b>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- Actions / Icons panel -->
+						<div class="card wine-actions-card" id="wineActionsCard" aria-live="polite">
+							<div class="wine-actions-head">
+								<div class="wine-actions-title is-hidden" id="wineActionsTitle"></div>
+							</div>
+
+							<div class="wine-actions-body">
+								<div class="wine-actions-prompt" id="wineActionsPrompt">
+									Click a Location for Icons
+								</div>
+
+								<div class="wine-actions-icons is-hidden" id="wineActionsIcons">
+									<a class="wine-icon-btn" id="winePhoneBtn" href="#" aria-label="Call" title="Call">
+										<img src="Assets/Images/Icons/Icon-Phone.png" alt="Call">
+									</a>
+
+									<a class="wine-icon-btn" id="wineMapBtn" href="#" target="_blank" rel="noopener" aria-label="Map" title="Map">
+										<img src="Assets/Images/Icons/Icon-Map.png" alt="Map">
+									</a>
+
+									<a class="wine-icon-btn" id="wineWebBtn" href="#" target="_blank" rel="noopener" aria-label="Website" title="Website">
+										<img src="Assets/Images/Icons/Icon-Web.png" alt="Website">
+									</a>
+								</div>
+								<div class="wine-actions-selected is-hidden" id="wineActionsSelectedName"></div>
+
+							</div>
+						</div>
+					</section>
+				</main>
+			</div>
+
+			<div class="screen" id="screenNext" aria-hidden="true"></div>
+		</div>
+
+		<button class="home-fab is-hidden" id="globalHomeFab" aria-label="Back to home">
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M6.5 10.5V21h11V10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+			<span>Home</span>
+		</button>
+	</div>
+
+	<script src="modules.js" defer></script>
+	<script src="app.js" defer></script>
+</body>
+</html>

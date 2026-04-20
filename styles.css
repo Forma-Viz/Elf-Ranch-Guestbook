@@ -1,0 +1,1711 @@
+/* =============================================================================
+   General (Variables, Reset, Base)
+   ============================================================================= */
+
+:root{
+  --bg: #061222;
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.75);
+
+  --gap: 20px;             /* space between tiles */
+  --tileRatio: 4.5;        /* width:height */
+
+  --shadow: 0 10px 25px rgba(0,0,0,.35);
+
+  --safeTop: env(safe-area-inset-top, 0px);
+  --safeBottom: env(safe-area-inset-bottom, 0px);
+
+  --slideMs: 720ms;        /* ~2x slower than 360ms */
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+
+*{ box-sizing:border-box; }
+
+html, body{
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.theme-dark{ background: var(--bg); }
+
+
+/* =============================================================================
+   App Shell & Navigation (3-pane swipe)
+   ============================================================================= */
+
+.shell{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* App shell: holds three screens [Prev | Current | Next] */
+.track{
+  height: 100%;
+  width: 300%;
+  display: flex;
+  transform: translateX(-33.3333%); /* center on CURRENT */
+  transition: transform var(--slideMs) var(--ease);
+  will-change: transform;
+}
+
+.screen{
+  width: 33.3333%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Each page scrolls internally */
+.screen > *{
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Legacy keyframes (kept for compatibility; not used by current track transform) */
+@keyframes slideOutLeft{ from{ transform: translateX(0); } to{ transform: translateX(-100%); } }
+@keyframes slideInRight{ from{ transform: translateX(100%); } to{ transform: translateX(0); } }
+@keyframes slideOutRight{ from{ transform: translateX(0); } to{ transform: translateX(100%); } }
+@keyframes slideInLeft{ from{ transform: translateX(-100%); } to{ transform: translateX(0); } }
+
+@media (prefers-reduced-motion: reduce){
+  .slide-out-left, .slide-in-right, .slide-out-right, .slide-in-left{ animation: none !important; }
+  .tile:active, .home-fab:active{ transform: none; }
+}
+
+
+/* =============================================================================
+   Shared Pages & Components
+   ============================================================================= */
+
+.page{
+  min-height: 100vh;
+  background: #111;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible; /* don't override .screen > * overflow-y:auto */
+}
+
+.page-header{
+  padding: calc(14px + var(--safeTop)) 14px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+}
+
+.page-header h1{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.page-body{
+  padding: 16px 14px calc(100px + var(--safeBottom)); /* leave room for bottom home button */
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* space between cards */
+}
+
+
+
+
+.card{
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: var(--shadow);
+}
+
+/* Center-bottom home button */
+.home-fab{
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + var(--safeBottom));
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color: rgba(255,255,255,.95);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 9999;
+}
+
+.home-fab:active{
+  transform: translateX(-50%) translateY(1px);
+}
+
+.home-fab span{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.home-fab.is-hidden{
+  display: none;
+}
+
+
+/* =============================================================================
+   Home Page
+   ============================================================================= */
+
+.home{
+  min-height: 100vh;
+  background: var(--bg);
+  background-image:
+  radial-gradient(900px 600px at 20% 15%, rgba(120, 255, 210, 0.12), rgba(0,0,0,0) 55%),
+  radial-gradient(800px 520px at 85% 35%, rgba(140, 120, 255, 0.12), rgba(0,0,0,0) 55%),
+  radial-gradient(900px 620px at 45% 85%, rgba(0, 255, 140, 0.10), rgba(0,0,0,0) 55%),
+  linear-gradient(180deg, #07140f 0%, #081a14 35%, #061116 70%, #050a10 100%);
+
+  background-color: #050a10;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.home-header{
+  padding: calc(14px + var(--safeTop)) 14px 12px;
+}
+
+.home-header h1{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: var(--text);
+}
+
+/* Edge-to-edge tiles (no side padding) */
+.menu{
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 0 0 calc(14px + var(--safeBottom));
+}
+
+/* Tile is full width, no rounding, no padding */
+.tile{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4.5 / 1;   /* exact ratio control */
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  background: #333;
+  overflow: hidden;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: var(--shadow);
+}
+
+.tile span{
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* right-align text */
+
+  text-align: right;
+
+  padding-right: 20px;
+  padding-left: 14px;
+
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: .2px;
+
+  z-index: 1;
+  text-shadow:
+    0 2px 12px rgba(0,0,0,.65),
+    0 1px 3px rgba(0,0,0,.45);
+}
+
+.tile:active{
+  transform: translateY(1px);
+}
+
+.tile-image{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tile-image::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.15) 45%,
+    rgba(0, 0, 0, 0.05) 70%
+  );
+}
+
+.footer-home{
+  text-align: center;
+  margin: 10px 0 20px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.footer-home a{
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+}
+
+.footer-home a:hover{
+  text-decoration: underline;
+}
+
+
+/* =============================================================================
+   Scoop Page (scoped)
+   Add: <main class="page page-scoop" ...> in Scoop.html
+   ============================================================================= */
+
+/* Standalone call-to-action text (not inside a card) */
+.page-scoop .cta-text{
+  text-align: center;
+  margin: 28px 0 12px;
+}
+
+.page-scoop .cta-title{
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: .3px;
+  text-shadow:
+    0 2px 10px rgba(0,0,0,.65),
+    0 1px 3px rgba(0,0,0,.45);
+}
+
+/* Closing note text (normal size, centered) */
+.page-scoop .closing-text{
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.9);
+  margin-bottom: 12px;
+}
+
+
+/* Section break / hierarchy marker */
+.page-scoop .scoop-section-break{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 2px;
+  color: rgba(255,255,255,.96);
+}
+
+.page-scoop .scoop-section-break::before,
+.page-scoop .scoop-section-break::after{
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.18);
+}
+
+.page-scoop .scoop-section-break span{
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Scoop page — cards with right-side action icon */
+.page-scoop .scoop-card-with-icon{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Left text content */
+.page-scoop .scoop-card-content{
+  flex: 1;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+/* Right icon container */
+.page-scoop .scoop-card-action{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon button styling */
+.page-scoop .scoop-card-action a{
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-scoop .scoop-card-action img{
+  width: 30px;
+  height: 30px;
+}
+
+.page-scoop .scoop-card-action a:active{
+  transform: translateY(1px);
+}
+
+
+
+/* ========================================================================================================================================================== Page Specific CSS  */
+
+
+/* =============================================================================
+   Emergency Info Page (scoped)
+   ============================================================================= */
+
+/* Space between emergency cards */
+.page-emergency .card-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Emergency card layout */
+.page-emergency .emergency-card{
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+}
+
+/* Left side: text */
+.page-emergency .emergency-card-content{
+  flex: 1;
+  min-width: 0;
+}
+
+/* Right side: stacked action icons */
+.page-emergency .emergency-card-actions{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Large, thumb-friendly icon buttons */
+.page-emergency .emergency-icon-btn{
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-emergency .emergency-icon-btn img{
+  width: 30px;
+  height: 30px;
+}
+
+.page-emergency .emergency-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Card typography (Emergency only) */
+.page-emergency .card-title{
+  font-size: 17px;
+  font-weight: 900;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.page-emergency .card-body{
+  line-height: 1.5;
+}
+
+/* Warning notice row */
+.page-emergency .notice-emergency{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.page-emergency .notice-emergency .notice-text{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Call 911 emphasis */
+.page-emergency .callout-911{
+  text-align: center;
+  font-size: 34px;
+  font-weight: 1000;
+  letter-spacing: .8px;
+}
+
+/* Center label + address */
+.page-emergency .label{
+  text-align: center;
+}
+
+.page-emergency .big-address{
+  text-align: center;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+
+
+/* =============================================================================
+   Essentials Around Town Page (scoped)
+   ============================================================================= */
+
+.page-essentials .card-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Place cards: text left, actions stacked right --- */
+.page-essentials .essentials-card{
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.page-essentials .essentials-card-content{
+  flex: 1;
+  min-width: 0;
+}
+
+.page-essentials .essentials-card-actions{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Large thumb-friendly action icons */
+.page-essentials .essentials-icon-btn{
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-essentials .essentials-icon-btn img{
+  width: 30px;
+  height: 30px;
+}
+
+.page-essentials .essentials-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Card title styling (Essentials only) */
+.page-essentials .card-title{
+  font-size: 17px;
+  font-weight: 900;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.page-essentials .card-body{
+  line-height: 1.5;
+}
+
+/* --- Special web/info card --- */
+.page-essentials .essentials-web-card{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.page-essentials .essentials-web-content{
+  flex: 1;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+.page-essentials .essentials-web-icon{
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-essentials .essentials-web-icon img{
+  width: 30px;
+  height: 30px;
+}
+
+.page-essentials .essentials-web-icon:active{
+  transform: translateY(1px);
+}
+
+
+
+
+/* =============================================================================
+   Local Eateries Page (scoped)
+   Expandable photo cards (stacked: info card expands, image card pushes down)
+   ============================================================================= */
+
+.page-eateries .card-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Main card chrome */
+.page-eateries .eatery-card{
+  padding: 14px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header row: title left, info icon right */
+.page-eateries .eatery-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-eateries .eatery-title{
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.page-eateries .eatery-info-btn{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.page-eateries .eatery-info-btn img{
+  width: 22px;
+  height: 22px;
+}
+
+.page-eateries .eatery-divider{
+  margin: 12px 0;
+  height: 1px;
+  background: rgba(255,255,255,.10);
+}
+
+/* Body (stacked cards) */
+.page-eateries .eatery-body{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Info "card" (collapsed by default) */
+.page-eateries .eatery-info-card{
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+
+  transition:
+    max-height 420ms var(--ease),
+    opacity 220ms var(--ease),
+    transform 420ms var(--ease);
+}
+
+/* Padding goes inside so collapse is clean */
+.page-eateries .eatery-info-inner{
+  padding: 14px;
+}
+
+/* Expanded state */
+.page-eateries .eatery-card.is-open .eatery-info-card{
+  max-height: 1000px; /* increase if you have very long descriptions */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Top row inside info card: text + actions */
+.page-eateries .eatery-details-top{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+/* Left info column */
+.page-eateries .eatery-details-left{
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.92);
+}
+
+.page-eateries .eatery-k{
+  color: rgba(255,255,255,.75);
+  font-weight: 800;
+}
+
+/* Right action icons */
+.page-eateries .eatery-details-actions{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: start;
+}
+
+.page-eateries .eatery-icon-btn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-eateries .eatery-icon-btn img{
+  width: 28px;
+  height: 28px;
+}
+
+.page-eateries .eatery-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Description */
+.page-eateries .eatery-desc{
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.86);
+}
+
+.page-eateries .eatery-desc p{
+  margin: 0 0 10px;
+}
+
+.page-eateries .eatery-desc p:last-child{
+  margin-bottom: 0;
+}
+
+/* Image "card" */
+.page-eateries .eatery-photo-card{
+  height: 220px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  background-color: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+
+
+
+
+/* =============================================================================
+   Local Markets Page (scoped)
+   Expandable info card + map card + crossfade slideshow
+   ============================================================================= */
+
+.page-markets .card-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Main card chrome */
+.page-markets .market-card{
+  padding: 14px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header row */
+.page-markets .market-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-markets .market-title{
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.page-markets .market-info-btn{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.page-markets .market-info-btn img{
+  width: 22px;
+  height: 22px;
+}
+
+.page-markets .market-divider{
+  margin: 12px 0;
+  height: 1px;
+  background: rgba(255,255,255,.10);
+}
+
+/* Body stack */
+.page-markets .market-body{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Info card (collapsed by default) */
+.page-markets .market-info-card{
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+
+  transition:
+    max-height 420ms var(--ease),
+    opacity 220ms var(--ease),
+    transform 420ms var(--ease);
+}
+
+.page-markets .market-info-inner{
+  padding: 14px;
+}
+
+/* Expanded */
+.page-markets .market-card.is-open .market-info-card{
+  max-height: 1200px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info layout */
+.page-markets .market-details-top{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.page-markets .market-details-left{
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.92);
+}
+
+.page-markets .market-k{
+  color: rgba(255,255,255,.75);
+  font-weight: 800;
+}
+
+.page-markets .market-details-actions{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: start;
+}
+
+.page-markets .market-icon-btn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-markets .market-icon-btn img{
+  width: 28px;
+  height: 28px;
+}
+
+.page-markets .market-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Description */
+.page-markets .market-desc{
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.86);
+}
+
+.page-markets .market-desc p{
+  margin: 0 0 10px;
+}
+
+.page-markets .market-desc p:last-child{
+  margin-bottom: 0;
+}
+
+/* Map card (hidden until expanded) */
+.page-markets .market-map-card{
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  background-color: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+
+  transition:
+    max-height 420ms var(--ease),
+    opacity 220ms var(--ease),
+    transform 420ms var(--ease);
+}
+
+/* Expanded */
+.page-markets .market-card.is-open .market-map-card{
+  max-height: 180px;
+  height: 180px;          /* <-- add this */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+
+/* Expanded */
+.page-markets .market-card.is-open .market-map-card{
+  max-height: 180px;  /* map card height */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* Main photo card (slideshow) */
+.page-markets .market-photo-card{
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+
+  background-color: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.page-markets .market-photo-layer{
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.page-markets .market-photo-front{
+  opacity: 1;
+  transition: opacity 1000ms var(--ease);
+  will-change: opacity;
+}
+
+.page-markets .market-photo-back{
+  opacity: 1; /* always visible behind */
+}
+
+
+
+
+
+
+
+/* =============================================================================
+   Local Adventures Page (scoped)
+   Expandable info + optional shuttle + optional map + slideshow
+   ============================================================================= */
+
+.page-adventures .card-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-adventures .adv-card{
+  padding: 14px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+.page-adventures .adv-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-adventures .adv-title{
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.page-adventures .adv-info-btn{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.page-adventures .adv-info-btn img{
+  width: 22px;
+  height: 22px;
+}
+
+.page-adventures .adv-divider{
+  margin: 12px 0;
+  height: 1px;
+  background: rgba(255,255,255,.10);
+}
+
+/* Stack */
+.page-adventures .adv-body{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Shared “expand in” animation style */
+.page-adventures .adv-info-card,
+.page-adventures .adv-map-card,
+.page-adventures .adv-shuttle-card{
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+
+  transition:
+    max-height 420ms var(--ease),
+    opacity 220ms var(--ease),
+    transform 420ms var(--ease);
+}
+
+/* Expanded */
+.page-adventures .adv-card.is-open .adv-info-card{
+  max-height: 1400px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-adventures .adv-card.is-open .adv-map-card{
+  max-height: 180px;
+  height: 180px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-adventures .adv-card.is-open .adv-shuttle-card{
+  max-height: 220px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info card inner */
+.page-adventures .adv-info-inner{
+  padding: 14px;
+}
+
+.page-adventures .adv-details-top{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.page-adventures .adv-details-left{
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.92);
+}
+
+.page-adventures .adv-k{
+  color: rgba(255,255,255,.75);
+  font-weight: 800;
+}
+
+/* Phone + phone2 formatting */
+.page-adventures .adv-phone{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: start;
+}
+
+.page-adventures .adv-phone-lines{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.page-adventures .adv-phone2{
+  opacity: .85;
+}
+
+/* Action icons */
+.page-adventures .adv-details-actions{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: start;
+}
+
+.page-adventures .adv-icon-btn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-adventures .adv-icon-btn img{
+  width: 28px;
+  height: 28px;
+}
+
+.page-adventures .adv-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Description */
+.page-adventures .adv-desc{
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.86);
+}
+
+.page-adventures .adv-desc p{
+  margin: 0 0 10px;
+}
+
+.page-adventures .adv-desc p:last-child{
+  margin-bottom: 0;
+}
+
+/* Shuttle card */
+.page-adventures .adv-shuttle-inner{
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.page-adventures .adv-shuttle-text{
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.90);
+}
+
+.page-adventures .adv-shuttle-btn{
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-adventures .adv-shuttle-btn img{
+  width: 28px;
+  height: 28px;
+}
+
+/* Map card (background-image set inline) */
+.page-adventures .adv-map-card{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Photo slideshow */
+.page-adventures .adv-photo-card{
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+
+  background-color: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.page-adventures .adv-photo-layer{
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.page-adventures .adv-photo-front{
+  opacity: 1;
+  transition: opacity 1000ms var(--ease);
+  will-change: opacity;
+}
+
+.page-adventures .adv-photo-back{
+  opacity: 1;
+}
+
+
+
+
+
+
+
+/* =============================================================================
+   Wine Tour Page (scoped)
+   ============================================================================= */
+
+.page-wine .wine-intro{
+  max-width: 640px;
+  margin: 10px auto 18px;
+  padding: 0 16px;
+  text-align: Left;
+  line-height: 1.55;
+  color: rgba(255,255,255,92);
+  font-weight: 300;
+}
+
+.page-wine .wine-itinerary-wrap{
+  max-width: 680px;
+  margin: 0 auto 18px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: rgba(21, 15, 65, 0.4);   /* purple tint */
+  border: 1px solid rgba(255,255,255,0.14);
+}
+
+.page-wine .wine-itinerary{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.page-wine .wine-itinerary td{
+  padding: 10px 8px;
+  vertical-align: top;
+  font-weight: 300; /* thin baseline */
+  color: rgba(255,255,255,92);
+}
+
+/* make the time columns behave like columns (tight + aligned) */
+.page-wine .wine-itinerary td.wine-time{
+  padding: 10px 6px;          /* less horizontal padding */
+  width: auto;                /* let content size itself */
+}
+
+/* 1st column (arrival time): right aligned */
+.page-wine .wine-itinerary td.wine-time:nth-child(1){
+  text-align: right;
+  width: 60px;                /* consistent width */
+}
+
+/* 2nd column (dash): small + minimal space */
+.page-wine .wine-itinerary td.wine-time:nth-child(2){
+  text-align: center;
+  width: 14px;                /* tighter */
+  padding-left: 0;
+  padding-right: 0;
+  color: rgba(255,255,255,0.55);
+}
+
+/* 3rd column (departure time): left aligned */
+.page-wine .wine-itinerary td.wine-time:nth-child(3){
+  text-align: left;
+  width: 60px;                /* consistent width */
+}
+
+/* location column: left aligned */
+.page-wine .wine-itinerary .wine-loc-cell{
+  text-align: left;
+}
+
+
+.page-wine .wine-time{
+  width: 64px;
+  text-align: center;
+  white-space: nowrap;
+  color: rgba(255,255,255,75);
+  font-weight: 400;
+}
+
+.page-wine .wine-loc-cell{
+  padding-left: 10px;
+  line-height: 1.35;
+  text-align: left;
+}
+
+
+/* keep “or” on same line as the preceding location */
+.page-wine .wine-or{
+  display: inline;
+  white-space: nowrap;
+  padding: 0 6px;
+}
+
+.page-wine .wine-loc{
+  display: inline;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+}
+
+.page-wine .wine-loc b{
+  font-weight: 900;
+  display: inline;
+  text-align: left;
+}
+
+.page-wine .wine-loc:hover b{
+  text-decoration: underline;
+}
+
+.page-wine .wine-loc.is-active b{
+  text-decoration: underline;
+}
+
+.page-wine .wine-actions-card{
+  max-width: 560px;
+  margin: 0 auto 22px;
+  padding: 16px;
+  text-align: center;
+}
+
+.page-wine .wine-actions-title{
+  font-size: 16px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.page-wine .wine-actions-prompt{
+  color: rgba(255,255,255,80);
+  font-weight: 300;
+  padding: 10px 0 6px;
+}
+
+.page-wine .wine-actions-icons{
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+/* Smaller buttons */
+.page-wine .wine-icon-btn{
+  width: 90px;
+  height: 55px;
+  border-radius: 14px;
+}
+
+/* Smaller icon image */
+.page-wine .wine-icon-btn img{
+  width: 48px;
+  height: 48px;
+}
+
+.page-wine .wine-icon-btn:active{
+  transform: translateY(1px);
+}
+
+/* Center the prompt text inside the card area */
+.page-wine .wine-actions-body{
+  min-height: 92px;              /* gives room to center nicely */
+  display: grid;
+  place-items: center;           /* centers horizontally + vertically */
+}
+
+/* Icons row: 3 across, single line, spaced for fat fingers */
+.page-wine .wine-actions-icons{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;                     /* spacing between buttons */
+  padding-top: 0;
+}
+
+.page-wine .wine-actions-selected{
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(255,255,255,92);
+}
+
+.page-wine .wine-itinerary td.wine-time:nth-child(2){
+  color: transparent; /* dash becomes invisible */
+}
+
+/* utility */
+.is-hidden{ display:none !important; }
+
+
+
+
+
+
+
+
+
+/* =============================================================================
+   Driving Tour Page (scoped)
+   ============================================================================= */
+
+.page-driving .drive-hero{
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+.page-driving .drive-wrap{
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Card container for the location list (Wine Tour style) */
+.page-driving .drive-list-card{
+  max-width: 680px;
+  margin: 14px auto 22px;
+  padding: 18px 22px;   /* balanced left/right padding */
+  border-radius: 18px;
+  background: rgba(21, 15, 65, 0.4);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+
+
+
+.page-driving .drive-list{
+  margin: 0;
+  padding-left: 28px;                      /* spacing between number and text */
+}
+
+.page-driving .drive-list li{
+  margin: 12px 0;
+}
+
+
+.page-driving .drive-list li::marker{
+  font-weight: 400;              /* numbers regular */
+  color: rgba(255,255,255,0.70);
+}
+
+.page-driving .drive-loc{
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-driving .drive-loc b{
+  font-weight: 900;              /* words bold */
+}
+
+.page-driving .drive-loc.is-active b{
+  text-decoration: underline;
+}
+
+/* Map card */
+.page-driving .drive-map-card{
+  margin: 10px 0 14px;
+  padding: 14px;
+}
+
+.page-driving .drive-map-prompt{
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 300;
+  color: rgba(255,255,255,0.85);
+}
+
+/* hidden until selection */
+.page-driving .drive-map-action{
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.page-driving .drive-map-text{
+  font-weight: 900;
+}
+
+.page-driving .drive-map-icon{
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+}
+
+.page-driving .drive-info{
+  margin: 10px 0 16px;
+  padding: 12px 0 0;
+}
+
+.page-driving .drive-info-row{
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 4px 0;
+}
+
+.page-driving .drive-info-label{
+  font-weight: 400;              /* regular */
+  color: rgba(255,255,255,0.88);
+}
+
+/* Only the "Info:" label bold */
+.page-driving .drive-info-row:first-child .drive-info-label{
+  font-weight: 900;
+}
+
+.page-driving .drive-info-value{
+  font-weight: 300;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.45;
+}
+
+.page-driving .drive-text{
+  text-align: left;
+  font-weight: 300;
+  color: rgba(255,255,255,0.90);
+  line-height: 1.60;
+}
+
+.page-driving .drive-text p{
+  margin: 0 0 12px;
+}
+
+.page-driving .drive-text b{
+  font-weight: 900;
+}
+
+.page-driving .drive-section-heading{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  text-align: left;
+}
+
+
+/* utility */
+.is-hidden{ display:none !important; }
+
+
+
+
+
+/* =============================================================================
+   Fairy Tale Page (MUST live in styles.css because head styles won't load via SPA)
+   ============================================================================= */
+
+@font-face{
+  font-family: "HolaSophia";
+  src:
+    url("/Assets/Fonts/Hola-Sophia.woff2") format("woff2"),
+    url("/Assets/Fonts/Hola-Sophia.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Force enchanted forest gradient even though JS sets inline background */
+.page.page-fairytale{
+  background-image:
+    radial-gradient(900px 600px at 20% 15%, rgba(120, 255, 210, 0.12), rgba(0,0,0,0) 55%),
+    radial-gradient(800px 520px at 85% 35%, rgba(140, 120, 255, 0.12), rgba(0,0,0,0) 55%),
+    radial-gradient(900px 620px at 45% 85%, rgba(0, 255, 140, 0.10), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, #07140f 0%, #081a14 35%, #061116 70%, #050a10 100%) !important;
+
+  background-color: #050a10 !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.page-fairytale .page-body{
+  padding: 18px 16px 28px;
+}
+
+.page-fairytale .fairy-wrap{
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 18px 18px 8px;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.page-fairytale .fairy-title{
+  font-family: "HolaSophia", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 28px;
+  line-height: 1.1;
+  margin: 2px 0 14px;
+  color: rgba(255,255,255,0.95);
+  letter-spacing: 0.2px;
+}
+
+.page-fairytale .fairy-text p{
+  font-family: "HolaSophia", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.65;
+  margin: 0 0 16px;
+  color: rgba(255,255,255,0.92);
+  font-weight: 400;
+}
+
+/* Drop cap */
+.page-fairytale .fairy-text p::first-letter{
+  float: left;
+  font-size: 56px;
+  line-height: 0.92;
+  padding: 8px 10px 0 0;
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 0 18px rgba(120,255,210,0.18), 0 0 22px rgba(140,120,255,0.14);
+}
+
+@media (max-width: 380px){
+  .page-fairytale .fairy-text p{ font-size: 17px; }
+  .page-fairytale .fairy-text p::first-letter{ font-size: 52px; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.page .page-body{
+  padding-bottom: calc(200px + env(safe-area-inset-bottom));
+}
+
+
+
+
+
+
+
