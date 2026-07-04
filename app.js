@@ -72,7 +72,7 @@ const ESSENTIALS_AROUND_TOWN = [
     name: "Nightingale Bakery",
     phone: "(707) 887-8887",
     distance: "1.3 mi (2.1 km)",
-    address1: "6660 Front St",
+    address1: "6665 Front St",
     address2: "Forestville, CA 95436"
   },
   {
