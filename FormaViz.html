@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MRESTV5M4S"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-MRESTV5M4S');
+	</script>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+	<!-- iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="FormaViz">
+
+	<!-- Android -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#050a10">
+
+	<title>Digital Guestbooks by FormaViz</title>
+	<link rel="stylesheet" href="styles.css" />
+
+	<style>
+		.page.page-formaviz-books{
+			min-height: 100vh;
+			background-image:
+				radial-gradient(900px 600px at 18% 10%, rgba(120, 255, 210, 0.13), rgba(0,0,0,0) 55%),
+				radial-gradient(760px 520px at 92% 22%, rgba(140, 120, 255, 0.15), rgba(0,0,0,0) 56%),
+				radial-gradient(780px 620px at 48% 96%, rgba(0, 255, 160, 0.10), rgba(0,0,0,0) 55%),
+				linear-gradient(180deg, #07140f 0%, #081a14 36%, #061116 70%, #050a10 100%) !important;
+			background-color: #050a10 !important;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+		}
+
+		.page-formaviz-books .page-header{
+			border-bottom: 1px solid rgba(255,255,255,.08);
+			background: rgba(0,0,0,.16);
+			backdrop-filter: blur(14px);
+		}
+
+		.page-formaviz-books .page-body{
+			padding: 22px 16px calc(110px + env(safe-area-inset-bottom));
+			gap: 18px;
+		}
+
+		.fv-wrap{
+			width: 100%;
+			max-width: 720px;
+			margin: 0 auto;
+		}
+
+		.fv-hero{
+			position: relative;
+			overflow: hidden;
+			padding: 28px 22px 24px;
+			border-radius: 28px;
+			background:
+				linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.055)),
+				rgba(0,0,0,.22);
+			border: 1px solid rgba(255,255,255,.16);
+			box-shadow: 0 24px 70px rgba(0,0,0,.38);
+		}
+
+		.fv-hero::before{
+			content: "";
+			position: absolute;
+			inset: -80px -80px auto auto;
+			width: 190px;
+			height: 190px;
+			border-radius: 999px;
+			background: rgba(120,255,210,.16);
+			filter: blur(6px);
+		}
+
+		.fv-kicker{
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 18px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			background: rgba(0,0,0,.24);
+			border: 1px solid rgba(255,255,255,.13);
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: .6px;
+			text-transform: uppercase;
+			color: rgba(255,255,255,.76);
+		}
+
+		.fv-title{
+			position: relative;
+			margin: 0;
+			font-size: clamp(34px, 10vw, 62px);
+			line-height: .94;
+			letter-spacing: -1.8px;
+			font-weight: 950;
+			color: rgba(255,255,255,.97);
+		}
+
+		.fv-subtitle{
+			position: relative;
+			margin: 18px 0 0;
+			font-size: 18px;
+			line-height: 1.5;
+			color: rgba(255,255,255,.82);
+			font-weight: 450;
+		}
+
+		.fv-card{
+			margin-top: 18px;
+			padding: 20px;
+			border-radius: 24px;
+			background: rgba(0,0,0,.24);
+			border: 1px solid rgba(255,255,255,.12);
+			box-shadow: 0 18px 48px rgba(0,0,0,.24);
+		}
+
+		.fv-card-title{
+			margin: 0 0 8px;
+			font-size: 19px;
+			line-height: 1.2;
+			font-weight: 900;
+		}
+
+		.fv-card-text{
+			margin: 0;
+			font-size: 15.5px;
+			line-height: 1.58;
+			color: rgba(255,255,255,.80);
+		}
+
+		.fv-use-grid{
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+			margin-top: 16px;
+		}
+
+		.fv-use{
+			padding: 13px 12px;
+			border-radius: 17px;
+			background: rgba(255,255,255,.065);
+			border: 1px solid rgba(255,255,255,.10);
+			font-size: 13.5px;
+			font-weight: 850;
+			color: rgba(255,255,255,.88);
+		}
+
+		.fv-cta{
+			margin-top: 18px;
+			padding: 22px 20px;
+			border-radius: 26px;
+			text-align: center;
+			background:
+				linear-gradient(135deg, rgba(120,255,210,.16), rgba(140,120,255,.12)),
+				rgba(0,0,0,.20);
+			border: 1px solid rgba(255,255,255,.16);
+		}
+
+		.fv-cta-main{
+			font-size: 21px;
+			line-height: 1.25;
+			font-weight: 950;
+			letter-spacing: -.2px;
+		}
+
+		.fv-cta-sub{
+			margin-top: 10px;
+			font-size: 15px;
+			line-height: 1.5;
+			color: rgba(255,255,255,.78);
+		}
+
+		.fv-signoff{
+			margin-top: 18px;
+			text-align: center;
+			font-size: 12px;
+			letter-spacing: .8px;
+			text-transform: uppercase;
+			font-weight: 850;
+			color: rgba(255,255,255,.52);
+		}
+
+		.page-formaviz-books .home-fab{
+			text-decoration: none;
+		}
+
+		@media (max-width: 380px){
+			.fv-hero{ padding: 24px 18px 20px; border-radius: 24px; }
+			.fv-use-grid{ grid-template-columns: 1fr; }
+			.fv-subtitle{ font-size: 16.5px; }
+		}
+	</style>
+
+</head>
+
+<body class="theme-dark">
+	<div class="shell">
+		<div class="track" id="track">
+			<div class="screen" id="screenPrev" aria-hidden="true"></div>
+
+			<div class="screen" id="screenCurrent">
+				<main class="page page-formaviz-books" data-base="#050a10">
+					<header class="page-header">
+						<h1>FormaViz Digital Books</h1>
+					</header>
+
+					<section class="page-body">
+						<div class="fv-wrap">
+							<section class="fv-hero">
+								<div class="fv-kicker">Powered by FormaViz inc</div>
+								<h2 class="fv-title">A better way to welcome people.</h2>
+								<p class="fv-subtitle">
+									Imagine giving your guests, customers, clients, or visitors a beautiful digital guide that feels custom-made for the experience you want them to have.
+								</p>
+							</section>
+
+							<section class="fv-card">
+								<h3 class="fv-card-title">More than a guestbook.</h3>
+								<p class="fv-card-text">
+									A digital book can welcome people, answer common questions, highlight local favorites, share menus, showcase services, explain instructions, tell your story, and make the whole experience feel more thoughtful and polished.
+								</p>
+
+								<div class="fv-use-grid" aria-label="Digital book examples">
+									<div class="fv-use">Guest Houses</div>
+									<div class="fv-use">Restaurants</div>
+									<div class="fv-use">Events</div>
+									<div class="fv-use">Tours</div>
+									<div class="fv-use">Showrooms</div>
+									<div class="fv-use">Small Businesses</div>
+								</div>
+							</section>
+
+							<section class="fv-card">
+								<h3 class="fv-card-title">Simple for them. Memorable for you.</h3>
+								<p class="fv-card-text">
+									No bulky binder. No scattered messages. No “where do I find that?” Just a clean, phone-friendly experience that helps people feel informed, cared for, and connected to the place or brand behind it.
+								</p>
+							</section>
+
+							<section class="fv-cta">
+								<div class="fv-cta-main">Interested in having your own digital book?</div>
+								<div class="fv-cta-sub">Ask Andrea for my info, and I’d be happy to talk through what could be created for your space, business, menu, event, or next idea.</div>
+							</section>
+
+							<div class="fv-signoff">If it can be imagined, it can be visualized.</div>
+						</div>
+					</section>
+				</main>
+			</div>
+
+			<div class="screen" id="screenNext" aria-hidden="true"></div>
+		</div>
+
+		<a class="home-fab" href="index.html" aria-label="Back to home">
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M6.5 10.5V21h11V10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+			<span>Home</span>
+		</a>
+	</div>
+</body>
+</html>
