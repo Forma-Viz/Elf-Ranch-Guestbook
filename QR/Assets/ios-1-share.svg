@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 790" width="440" height="790" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">
+  <g transform="translate(60,40)">
+    <rect x="0" y="0" width="320" height="640" rx="46" fill="#111114"/>
+    <rect x="7" y="7" width="306" height="626" rx="40" fill="#ffffff"/>
+    <clipPath id="clip6040"><rect x="7" y="7" width="306" height="626" rx="40"/></clipPath>
+    <g clip-path="url(#clip6040)">
+      <text x="34" y="42" font-size="13" font-weight="600" fill="#111" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">9:41</text>
+      <g fill="#111"><rect x="248" y="32" width="14" height="10" rx="2"/><rect x="268" y="30" width="13" height="12" rx="2"/><rect x="287" y="31" width="20" height="11" rx="3" fill="none" stroke="#111" stroke-width="1.5"/><rect x="289" y="33" width="14" height="7" rx="1.5"/></g>
+  <rect x="7" y="52" width="306" height="470" fill="#fff"/>
+  <rect x="30" y="86" width="150" height="18" rx="9" fill="#1c1c1e"/>
+  <rect x="30" y="118" width="256" height="10" rx="5" fill="#e5e5ea"/>
+  <rect x="30" y="136" width="200" height="10" rx="5" fill="#e5e5ea"/>
+  <rect x="30" y="168" width="256" height="120" rx="16" fill="#eef0ff"/>
+  <circle cx="86" cy="228" r="26" fill="#4F46E5" opacity="0.35"/>
+  <rect x="128" y="208" width="130" height="10" rx="5" fill="#c7ccf5"/>
+  <rect x="128" y="228" width="96" height="10" rx="5" fill="#c7ccf5"/>
+  <rect x="30" y="306" width="120" height="86" rx="14" fill="#f2f2f7"/>
+  <rect x="166" y="306" width="120" height="86" rx="14" fill="#f2f2f7"/>
+  <rect x="30" y="410" width="256" height="86" rx="14" fill="#f2f2f7"/>
+  <rect x="7" y="522" width="306" height="111" fill="#f7f7fa"/>
+  <line x1="7" y1="522" x2="313" y2="522" stroke="#e0e0e6"/>
+  <rect x="46" y="536" width="228" height="30" rx="15" fill="#ffffff" stroke="#dcdce2"/>
+  <g><rect x="112" y="546" width="9" height="7" rx="1.5" fill="#8e8e93"/><path d="M114 546 v-3 a2.5 2.5 0 0 1 5 0 v3" fill="none" stroke="#8e8e93" stroke-width="1.4"/></g><text x="168" y="556" font-size="12.5" fill="#3a3a3c" text-anchor="middle">sunspot.app</text>
+  <text x="22" y="559" font-size="13" font-weight="600" fill="#3a3a3c">AA</text>
+  <text x="288" y="558" font-size="14" fill="#007AFF" text-anchor="middle">&#8635;</text>
+  <g stroke="#007AFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 605 l-10 -9 10 -9"/>
+    <path d="M105 587 l10 9 -10 9" stroke="#c2c7cc"/>
+    <path d="M234 588 v14 h14 M228 588 h6 M228 588 v18 h20 v-18" stroke="none"/>
+    <path d="M228 587 h20 v20 l-10 -6 -10 6 z"/>
+    <rect x="284" y="587" width="8" height="8" rx="1.5"/><rect x="295" y="587" width="8" height="8" rx="1.5"/><rect x="284" y="598" width="8" height="8" rx="1.5"/><rect x="295" y="598" width="8" height="8" rx="1.5"/>
+  </g>
+  <rect x="110" y="622" width="100" height="4.5" rx="2.25" fill="#c7c7cc"/>
+    </g>
+    <rect x="122.0" y="10" width="76" height="22" rx="11" fill="#111114"/>
+  </g>
+<g stroke="#007AFF" stroke-width="2.0" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(232,636) scale(1.0)">
+      <path d="M-7 -1 v10 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2 -2 v-10"/>
+      <path d="M0 -13 v16"/><path d="M-5 -8 l5 -5 5 5"/></g>
+<circle cx="232" cy="636" r="26" fill="none" stroke="#FF3B30" stroke-width="3.5"/><circle cx="232" cy="636" r="26" fill="#FF3B30" opacity="0.08"/>
+<g><rect x="148.0" y="727" width="168.0" height="30" rx="15" fill="#111114"/>
+    <text x="232" y="747" font-size="13" font-weight="600" fill="#fff" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">Tap the Share button</text></g></svg>

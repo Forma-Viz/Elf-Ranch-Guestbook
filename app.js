@@ -215,7 +215,7 @@ const LOCAL_MARKETS = [
   {
     title: "Andy's Market",
     phone: "(707) 823-8661",
-    hours: "8:00 am - 7:00 pm (Daily)",
+    hours: "8:00 am - 8:00 pm (Daily)",
     distance: "5.6 mi (9.0 km)",
     address1: "1691 N. Gravenstein",
     address2: "Sebastopol, CA 95472",
@@ -269,7 +269,7 @@ const LOCAL_ADVENTURES = [
   },
   {
     title: "Safari West",
-    phone: "(707) 579-2551",
+    phone: "(800) 616-2695",
     reservations: "Recommended",
     hours: "Variable",
     address1: "3115 Porter Creek Rd",
@@ -298,7 +298,7 @@ const LOCAL_ADVENTURES = [
     image1: "Assets/Images/Local/SB-01.jpg",
     imagemap: "Assets/Images/Maps/Elf-to-Hot-Air-Balloon.jpg",
     description:
-      "Sonoma Valley's oldest Hot Air Balloon company offers aerial tours over Northern California's largest vineyards, featuring lively commentary from local experts.\n\n"
+      "One of Sonoma Valley's long time Hot Air Balloon companys offers aerial tours over Northern California's largest vineyards, featuring lively commentary from local experts.\n\n"
   },
   {
     title: "Night Sky Adventure",

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4F46E5">
+<title>Add This App to Your Home Screen</title>
+<style>
+  :root{
+    --brand:#4F46E5;
+    --brand-2:#7C3AED;
+    --bg:#ffffff;
+    --bg-soft:#f5f5f9;
+    --card:#ffffff;
+    --text:#14141a;
+    --muted:#6b6b7b;
+    --line:#e6e6ee;
+    --ios:#007AFF;
+    --android:#1a73e8;
+    --shadow:0 1px 2px rgba(20,20,40,.06), 0 8px 24px rgba(20,20,60,.08);
+    --tabh:56px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e0e13; --bg-soft:#16161f; --card:#181822; --text:#f2f2f7;
+      --muted:#9a9aab; --line:#2a2a37;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  img{max-width:100%;display:block}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--brand) 0%,var(--brand-2) 100%);
+    color:#fff;padding:calc(34px + env(safe-area-inset-top)) 22px 34px;
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+    background:rgba(255,255,255,.09);right:-90px;top:-110px}
+  .hero .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:0 0 10px}
+  .hero h1{margin:0;font-size:clamp(26px,7.5vw,38px);line-height:1.15;font-weight:800;letter-spacing:-.02em}
+  .hero p{margin:12px auto 0;max-width:34ch;font-size:15px;opacity:.92}
+
+  /* ---------- sticky tabs ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:50;display:flex;gap:6px;
+    padding:8px 10px;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--line);height:var(--tabh);align-items:center;
+  }
+  .tabs a{
+    flex:1;text-align:center;text-decoration:none;color:var(--muted);
+    font-size:13.5px;font-weight:600;padding:9px 4px;border-radius:12px;
+    white-space:nowrap;transition:background .18s,color .18s;
+  }
+  .tabs a.active{background:var(--brand);color:#fff}
+
+  /* ---------- sections ---------- */
+  section{padding:36px 20px 44px;scroll-margin-top:var(--tabh)}
+  section:nth-of-type(even){background:var(--bg-soft)}
+  .eyebrow{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,transparent);
+    padding:5px 11px;border-radius:999px;margin:0 0 12px}
+  .eyebrow.ios{color:var(--ios);background:color-mix(in srgb,var(--ios) 13%,transparent)}
+  .eyebrow.android{color:#0f9d58;background:color-mix(in srgb,#0f9d58 14%,transparent)}
+  h2{margin:0 0 8px;font-size:clamp(22px,6vw,28px);line-height:1.2;font-weight:800;letter-spacing:-.015em}
+  .lede{margin:0 0 22px;color:var(--muted);font-size:15.5px}
+  p{margin:0 0 14px}
+
+  .figure{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:14px;margin:0 0 22px;box-shadow:var(--shadow);
+  }
+  .figure img{margin:0 auto;border-radius:12px}
+  .figure figcaption{margin-top:10px;text-align:center;font-size:13px;color:var(--muted)}
+
+  .facts{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:10px}
+  .facts li{
+    display:flex;gap:12px;align-items:flex-start;background:var(--card);
+    border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);
+  }
+  .facts .ico{flex:0 0 34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--brand) 12%,transparent);font-size:17px}
+  .facts b{display:block;font-size:15px}
+  .facts span{font-size:13.5px;color:var(--muted);line-height:1.45}
+
+  /* ---------- steps ---------- */
+  .steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  .step{
+    position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:20px;padding:18px 18px 16px;margin:0 0 16px;box-shadow:var(--shadow);
+  }
+  .step-head{display:flex;gap:13px;align-items:center;margin-bottom:6px}
+  .num{
+    counter-increment:s;flex:0 0 32px;height:32px;border-radius:50%;
+    display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;
+    background:var(--brand);
+  }
+  .num:before{content:counter(s)}
+  .ios .num{background:var(--ios)}
+  .android .num{background:#0f9d58}
+  .step h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .step p{margin:0 0 12px;padding-left:45px;font-size:14.5px;color:var(--muted)}
+  .step .shot{border-radius:14px;overflow:hidden;background:var(--bg-soft);padding:8px}
+  .step .shot img{margin:0 auto}
+
+  .note{
+    display:flex;gap:11px;border-radius:16px;padding:14px 16px;font-size:14px;
+    background:color-mix(in srgb,var(--brand) 8%,transparent);
+    border:1px solid color-mix(in srgb,var(--brand) 22%,transparent);
+    margin:0 0 18px;line-height:1.5;
+  }
+  .note.ios{background:color-mix(in srgb,var(--ios) 8%,transparent);border-color:color-mix(in srgb,var(--ios) 24%,transparent)}
+  .note.android{background:color-mix(in srgb,#0f9d58 8%,transparent);border-color:color-mix(in srgb,#0f9d58 24%,transparent)}
+  .note .ico{flex:0 0 auto;font-size:16px}
+  .note b{font-weight:700}
+
+  .done{
+    text-align:center;border-radius:20px;padding:22px 18px;margin-top:6px;
+    background:linear-gradient(150deg,var(--brand),var(--brand-2));color:#fff;
+  }
+  .done h3{margin:0 0 6px;font-size:19px;font-weight:800}
+  .done p{margin:0;color:rgba(255,255,255,.9);font-size:14.5px;padding:0}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:14px 16px;margin:0 0 12px;box-shadow:var(--shadow)}
+  summary{cursor:pointer;font-weight:650;font-size:15px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary:after{content:"+";float:right;color:var(--muted);font-weight:400;font-size:19px;line-height:1}
+  details[open] summary:after{content:"\2013"}
+  details p{margin:10px 0 0;font-size:14px;color:var(--muted)}
+
+  footer{padding:28px 20px calc(40px + env(safe-area-inset-bottom));text-align:center;
+    color:var(--muted);font-size:12.5px;border-top:1px solid var(--line)}
+
+  .top{
+    position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));
+    width:46px;height:46px;border-radius:50%;background:var(--brand);color:#fff;
+    display:grid;place-items:center;text-decoration:none;font-size:20px;
+    box-shadow:0 6px 20px rgba(79,70,229,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;
+  }
+  .top.show{opacity:1;pointer-events:auto}
+
+  @media (min-width:720px){
+    section{padding:56px 40px 64px;max-width:760px;margin:0 auto}
+    section:nth-of-type(even){max-width:none}
+    section:nth-of-type(even) > *{max-width:760px;margin-left:auto;margin-right:auto}
+    .tabs a{font-size:15px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="kicker">Quick Guide</p>
+  <h1>Put this app on your&nbsp;home screen</h1>
+  <p>Two taps and it opens like a real app &mdash; full screen, no address bar. Takes about 20&nbsp;seconds.</p>
+</header>
+
+<nav class="tabs" id="tabs">
+  <a href="#what" class="active">What&rsquo;s a PWA?</a>
+  <a href="#ios">iPhone</a>
+  <a href="#android">Android</a>
+</nav>
+
+<!-- ================= 1. WHAT IS A PWA ================= -->
+<section id="what">
+  <span class="eyebrow">Section 1</span>
+  <h2>What is a PWA?</h2>
+  <p class="lede">A Progressive Web App is a website that behaves like an installed app once you add it to your home screen.</p>
+
+  <p>There&rsquo;s nothing to download and no app store involved. You visit the site once, add it to your home screen, and from then on it gets its own icon and opens in its own window &mdash; without the browser&rsquo;s address bar, tabs, or toolbar in the way.</p>
+
+  <figure class="figure">
+    <img src="Assets/what-is-a-pwa.svg" alt="Side-by-side comparison: the same site in a browser with an address bar and toolbar, versus installed as a PWA filling the whole screen." width="820" height="820" loading="lazy">
+    <figcaption>Same site, same content &mdash; installed, it gets the whole screen.</figcaption>
+  </figure>
+
+  <ul class="facts">
+    <li><span class="ico">&#128241;</span><div><b>Its own icon</b><span>Sits on your home screen next to your other apps.</span></div></li>
+    <li><span class="ico">&#9974;</span><div><b>Full screen</b><span>No address bar or browser buttons stealing space.</span></div></li>
+    <li><span class="ico">&#9889;</span><div><b>Instant &amp; tiny</b><span>No download, no storage hit, always the latest version.</span></div></li>
+    <li><span class="ico">&#128246;</span><div><b>Works offline-ish</b><span>Many PWAs cache content so they still open with a weak signal.</span></div></li>
+    <li><span class="ico">&#128276;</span><div><b>Notifications</b><span>Supported on Android, and on iPhone once added to the home screen.</span></div></li>
+  </ul>
+
+  <figure class="figure">
+    <img src="Assets/pwa-home-screen.svg" alt="An iPhone home screen with the installed PWA icon highlighted among the other app icons." width="560" height="740" loading="lazy">
+    <figcaption>Once installed, it&rsquo;s indistinguishable from any other app icon.</figcaption>
+  </figure>
+
+  <div class="note"><span class="ico">&#128161;</span><div><b>Nothing to uninstall.</b> Don&rsquo;t want it anymore? Press and hold the icon and delete it, exactly like a normal app. Nothing is left behind.</div></div>
+
+  <p style="text-align:center;color:var(--muted);font-size:14.5px">Now pick your phone below &darr;</p>
+</section>
+
+<!-- ================= 2. iOS ================= -->
+<section id="ios" class="ios">
+  <span class="eyebrow ios">Section 2</span>
+  <h2>iPhone &amp; iPad</h2>
+  <p class="lede">Works in Safari, Chrome, and Edge on iOS 16.4 or later. Safari gives the most reliable result.</p>
+
+  <div class="note ios"><span class="ico">&#63743;</span><div><b>Open the site in Safari first.</b> If you&rsquo;re reading this inside another app&rsquo;s built-in browser (Instagram, Slack, a QR scanner), tap the &ldquo;Open in Safari&rdquo; option first &mdash; the Add to Home Screen button won&rsquo;t be there otherwise.</div></div>
+
+  <ol class="steps">
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Tap the Share button</h3></div>
+      <p>It&rsquo;s the square with an arrow pointing up, in the toolbar at the bottom of Safari. On iPad it&rsquo;s at the top right.</p>
+      <div class="shot"><img src="Assets/ios-1-share.svg" alt="Safari on iPhone with the Share button in the bottom toolbar circled." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Scroll and choose &ldquo;Add to Home Screen&rdquo;</h3></div>
+      <p>The share sheet opens. Scroll down past the app icons to the list of actions and tap <b>Add to Home Screen</b>.</p>
+      <div class="shot"><img src="Assets/ios-2-add-to-home-screen.svg" alt="The iOS share sheet with the Add to Home Screen row highlighted." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Name it, then tap Add</h3></div>
+      <p>You can shorten the name so it fits under the icon. On iOS 26 and later leave <b>Open as Web App</b> switched on &mdash; that&rsquo;s what makes it launch full screen instead of as a Safari bookmark. Then tap <b>Add</b> at the top right.</p>
+      <div class="shot"><img src="Assets/ios-3-confirm.svg" alt="The Add to Home Screen dialog showing the name field, the Open as Web App toggle turned on, and the Add button." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Find it on your home screen</h3></div>
+      <p>The icon appears on the last page of your home screen (and in the App Library). Tap it and the app opens full screen.</p>
+      <div class="shot"><img src="Assets/pwa-home-screen.svg" alt="iPhone home screen with the newly added app icon highlighted." width="560" height="740" loading="lazy"></div>
+    </li>
+  </ol>
+
+  <div class="done"><h3>That&rsquo;s it &#127881;</h3><p>Launch it from the icon from now on, not from Safari.</p></div>
+</section>
+
+<!-- ================= 3. ANDROID ================= -->
+<section id="android" class="android">
+  <span class="eyebrow android">Section 3</span>
+  <h2>Android</h2>
+  <p class="lede">Shown in Chrome. Samsung Internet, Edge, Brave, and Firefox all work the same way &mdash; only the menu wording changes.</p>
+
+  <div class="note android"><span class="ico">&#9989;</span><div><b>Watch for the shortcut.</b> Chrome often pops up an &ldquo;Install app&rdquo; banner or a small install icon in the address bar on its own. If you see it, tap it and skip to step&nbsp;3.</div></div>
+
+  <ol class="steps">
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Open the browser menu</h3></div>
+      <p>Tap the three dots (&#8942;) at the top right of Chrome. On some phones the menu is at the bottom right instead.</p>
+      <div class="shot"><img src="Assets/android-1-menu.svg" alt="Chrome on Android with the three-dot menu button at the top right circled." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Tap &ldquo;Add to Home screen&rdquo;</h3></div>
+      <p>Depending on your Chrome version this reads <b>Add to Home screen</b> or <b>Install app</b>. Newer versions tuck it under <b>Share</b> or <b>Save and share</b> &mdash; look there if you don&rsquo;t see it right away.</p>
+      <div class="shot"><img src="Assets/android-2-add-to-home-screen.svg" alt="The Chrome overflow menu open with Add to Home screen highlighted." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Confirm the install</h3></div>
+      <p>Edit the name if you want, then tap <b>Install</b> (or <b>Add</b>). If Android asks a second time whether to add the icon, confirm again.</p>
+      <div class="shot"><img src="Assets/android-3-confirm.svg" alt="The Chrome install dialog with the app name field and the Install button circled." width="440" height="790" loading="lazy"></div>
+    </li>
+
+    <li class="step">
+      <div class="step-head"><span class="num"></span><h3>Launch it from your home screen</h3></div>
+      <p>The icon lands on your home screen and in the app drawer. It even shows up in Android&rsquo;s app switcher as its own app.</p>
+      <div class="shot"><img src="Assets/pwa-home-screen.svg" alt="Android home screen with the newly installed app icon highlighted." width="560" height="740" loading="lazy"></div>
+    </li>
+  </ol>
+
+  <div class="done"><h3>Installed &#127881;</h3><p>Open it from the icon for the full-screen experience.</p></div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <span class="eyebrow">Troubleshooting</span>
+  <h2>If something looks different</h2>
+
+  <details><summary>I don&rsquo;t see &ldquo;Add to Home Screen&rdquo; on my iPhone</summary>
+    <p>You&rsquo;re almost certainly in an in-app browser rather than Safari. Tap the &hellip; or share icon and choose <b>Open in Safari</b>, then start again. Private Browsing tabs also hide the option in older iOS versions.</p></details>
+
+  <details><summary>The menu item on Android says something else</summary>
+    <p>Chrome, Samsung Internet, and Edge each word it differently: <b>Install app</b>, <b>Add page to</b> &rarr; <b>Home screen</b>, or <b>Add to phone</b>. They all do the same thing.</p></details>
+
+  <details><summary>It opened in the browser instead of full screen</summary>
+    <p>On iOS, the <b>Open as Web App</b> toggle was probably switched off when you added it. Delete the icon and add it again with the toggle on. On Android, you may have created a plain bookmark shortcut rather than installing the app &mdash; try the menu again and look for <b>Install app</b>.</p></details>
+
+  <details><summary>How do I remove it?</summary>
+    <p>Press and hold the icon on your home screen and choose Delete / Uninstall, the same as any other app.</p></details>
+</section>
+
+<footer>
+  Steps verified against iOS&nbsp;26 (Safari) and Chrome for Android, 2026.<br>Menu labels can shift slightly between versions.
+</footer>
+
+<a href="#top" class="top" id="toTop" aria-label="Back to top">&#8593;</a>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#tabs a'));
+  var ids = links.map(function(a){ return a.getAttribute('href').slice(1); });
+  var sections = ids.map(function(id){ return document.getElementById(id); });
+  var toTop = document.getElementById('toTop');
+
+  function setActive(id){
+    links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+  }
+
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-58px 0px -65% 0px', threshold: 0 });
+    sections.forEach(function(s){ if (s) io.observe(s); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      toTop.classList.toggle('show', window.scrollY > 700);
+      ticking = false;
+    });
+  }, { passive: true });
+
+  toTop.addEventListener('click', function(e){
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
